@@ -1,0 +1,43 @@
+root = true
+
+[*.*]
+indent_style = tab
+trim_trailing_whitespace = true
+
+[*.cs]
+dotnet_style_predefined_type_for_locals_parameters_members					= true	: warning
+dotnet_style_predefined_type_for_member_access								= true	: warning
+dotnet_style_coalesce_expression											= true	: warning
+dotnet_style_null_propagation												= true	: warning
+csharp_style_var_for_built_in_types											= true	: warning
+csharp_style_throw_expression												= false	: warning
+csharp_prefer_braces														= true	: warning
+dotnet_sort_system_directives_first											= false
+csharp_new_line_before_else													= false
+csharp_new_line_before_catch												= false
+csharp_new_line_before_finally												= false
+csharp_new_line_before_members_in_object_initializers						= true
+csharp_new_line_before_members_in_anonymous_types							= true
+csharp_new_line_between_query_expression_clauses							= true
+csharp_indent_case_contents													= true
+csharp_space_after_cast														= false
+csharp_space_after_keywords_in_control_flow_statements						= true
+csharp_space_between_method_declaration_parameter_list_parentheses			= false
+csharp_space_between_method_call_parameter_list_parentheses					= false
+csharp_preserve_single_line_blocks											= true
+
+# parametrø ir fieldø pavadinimai turi bûti camenCase
+[*.cs]
+dotnet_naming_rule.parameters_and_fields_must_be_camel_cased.symbols = parameters_fields_symbols
+dotnet_naming_symbols.parameters_fields_symbols.applicable_kinds = parameter,field
+dotnet_naming_style.parameters_and_fields_must_be_camel_cased.style = camel_case_style
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_rule.parameters_and_fields_must_be_camel_cased.severity = error
+
+# properèiø ir metodø pavadinimai turi bûti PascalCase
+[*.cs]
+dotnet_naming_rule.methods_and_properties_must_be_pascal_cased.symbols = methods_properties_symbols
+dotnet_naming_symbols.methods_properties_symbols.applicable_kinds = method,property
+dotnet_naming_style.methods_and_properties_must_be_pascal_cased.style = pascal_case_style
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+dotnet_naming_rule.methods_and_properties_must_be_pascal_cased.severity = error

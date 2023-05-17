@@ -1,0 +1,22 @@
+image: Visual Studio 2022
+
+skip_branch_with_pr: true
+
+before_build:
+- nuget restore
+- choco install opencover.portable
+- choco install codecov
+
+build:
+  project: FileExchangeRestApi.sln
+  verbosity: minimal
+
+# test_script:
+# - OpenCover.Console.exe \
+# 	-target:"%xunit20%\xunit.console.x86.exe" \
+# 	-targetargs:".\Tests\Api.Tests\bin\Debug\net6.0\FileExchangeRestApi.Api.dll -noshadow" \
+#   -mergeoutput \
+# 	-output:".\FileExchangeRestApi_coverage.xml"
+# 	-register:user \
+
+# - codecov -f "FileExchangeRestApi_coverage.xml
