@@ -8,15 +8,15 @@ before_build:
 - choco install codecov
 
 build:
-  project: FileExchangeRestApi.sln
+  project: FileExchange.sln
   verbosity: minimal
 
 # test_script:
 # - OpenCover.Console.exe \
 # 	-target:"%xunit20%\xunit.console.x86.exe" \
-# 	-targetargs:".\Tests\Api.Tests\bin\Debug\net6.0\FileExchangeRestApi.Api.dll -noshadow" \
+# 	-targetargs:".\Tests\Api.Tests\bin\Debug\net6.0\FileExchange.Api.dll -noshadow" \
 #   -mergeoutput \
-# 	-output:".\FileExchangeRestApi_coverage.xml"
+# 	-output:".\FileExchange_coverage.xml"
 # 	-register:user \
 
-# - codecov -f "FileExchangeRestApi_coverage.xml
+# - codecov -f "FileExchange_coverage.xml

@@ -1,4 +1,5 @@
 using FileExchange.Api.Extensions;
+using FileExchange.Api.Handlers;
 using FileExchange.Api.Middlewares;
 using FileExchange.Contracts;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +14,7 @@ builder.Services.AddDemoHttpClient();
 builder.Services.ConfigureAllOptions(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 

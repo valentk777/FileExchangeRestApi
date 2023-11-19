@@ -25,12 +25,15 @@ public class DemoHttpClient : IDemoHttpClient
 
 	public async Task<DemoDomainFile> GetFile(string fileKey)
 	{
+		// only for local testing
+		fileKey = "sample.pdf";
+
 		var uri = new Uri(_client.BaseAddress + fileKey);
 		var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
 		using HttpResponseMessage response = await SendRequest(request);
 
-		var fileStream = await response.Content.ReadAsStreamAsync();
+		var fileStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
 		return new DemoDomainFile(fileKey, fileStream);
 		//var fileBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
@@ -52,7 +55,8 @@ public class DemoHttpClient : IDemoHttpClient
 
 	private async Task<HttpResponseMessage> SendRequest(HttpRequestMessage request)
 	{
-		var response = await _client.SendAsync(request);
+		//var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+		var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
 		response.EnsureSuccessStatusCode();
 

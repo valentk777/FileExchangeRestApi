@@ -60,7 +60,7 @@ public class DemoControllerTests
 		Assert.NotNull(result);
 		Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
 		Assert.NotNull(result.Value);
-		Assert.Equal(string.Format(Constants.Logging.ProvidedBadParameterValue, "fileKey", incorrectFileName), result.Value);
+		Assert.Equal(string.Format(Constants.Logging.ProvidedBadParameterValue, "fileName", incorrectFileName), result.Value);
 	}
 
 	[Fact]

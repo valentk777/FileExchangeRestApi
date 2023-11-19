@@ -2,16 +2,15 @@
 using System.IO;
 
 namespace FileExchange.Contracts;
-public class DemoDomainFile
-{
-	public string? Name { get; init; } = default!;
 
-	public Stream Content { get; init; } = Stream.Null;
+public record DemoDomainFile(string Name, Stream Content)
+{
+	//public Stream Content { get; init; } = Stream.Null;
 	//public byte[] Content { get; init; } = Array.Empty<byte>();
 
-	public DemoDomainFile()
-	{
-	}
+	//public DemoDomainFile()
+	//{
+	//}
 
 	//public DemoDomainFile(string fileName, byte[]? data)
 	//{
@@ -19,11 +18,11 @@ public class DemoDomainFile
 	//	Content = data ?? Array.Empty<byte>();
 	//}
 
-	public DemoDomainFile(string fileName, Stream? data)
-	{
-		Name = fileName;
-		Content = data ?? Stream.Null;
-	}
+	//public DemoDomainFile(string fileName, Stream? data)
+	//{
+	//	Name = fileName;
+	//	Content = data ?? Stream.Null;
+	//}
 
 	//public DemoDomainFile(IFormFile? file)
 	//{
@@ -39,7 +38,7 @@ public class DemoDomainFile
 	//}
 
 	public bool IsValid() =>
-		!string.IsNullOrEmpty(Name) && !Name.Contains(" ") && Content != Stream.Null;
+		!string.IsNullOrEmpty(Name) && !Name.Contains(" ");
 
 	//public bool IsValid() =>
 	//	!string.IsNullOrEmpty(Name) && !Name.Contains(" ") && Content != null && Content.Length != 0;
