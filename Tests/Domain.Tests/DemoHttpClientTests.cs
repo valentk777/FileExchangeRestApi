@@ -15,7 +15,7 @@ namespace FileExchange.Domain.Tests;
 public class DemoHttpClientTests
 {
 	private TestHttpClientMock _testClient;
-	private DemoHttpClient _DemoHttpClient;
+	private DemoHttpClient _demoHttpClient;
 
 	private string fileName = "fileName";
 	private string responseContent = "Response content";
@@ -30,7 +30,7 @@ public class DemoHttpClientTests
 		};
 
 		_testClient = new TestHttpClientMock(Constants.HttpClient.HttpClientName);
-		_DemoHttpClient = new DemoHttpClient(Options.Create(config), _testClient.GetHttpClientFactory());
+		_demoHttpClient = new DemoHttpClient(Options.Create(config), _testClient.GetHttpClientFactory());
 	}
 
 	[Fact]
@@ -56,7 +56,7 @@ public class DemoHttpClientTests
 
 		_testClient.SetupSendAsync(responseMessage);
 
-		await _DemoHttpClient.GetFile(fileName);
+		await _demoHttpClient.GetFile(fileName);
 
 		_testClient.VerifySendAsync(r => r.RequestUri.AbsolutePath.Contains(fileName));
 	}
@@ -72,7 +72,7 @@ public class DemoHttpClientTests
 
 		_testClient.SetupSendAsync(responseMessage);
 
-		var file = await _DemoHttpClient.GetFile(fileName);
+		var file = await _demoHttpClient.GetFile(fileName);
 
 		Assert.NotNull(file);
 		Assert.Equal(fileName, file.Name);
@@ -93,7 +93,7 @@ public class DemoHttpClientTests
 
 		_testClient.SetupSendAsync(responseMessage);
 
-		Assert.ThrowsAsync<HttpRequestException>(async () => await _DemoHttpClient.GetFile(fileName));
+		Assert.ThrowsAsync<HttpRequestException>(async () => await _demoHttpClient.GetFile(fileName));
 	}
 
 	[Fact]
@@ -108,7 +108,7 @@ public class DemoHttpClientTests
 
 		var file = new DemoDomainFile(fileName, _nonEmptyBody);
 
-		await _DemoHttpClient.UploadFile(file);
+		await _demoHttpClient.UploadFile(file);
 
 		_testClient.VerifySendAsync(r => r.RequestUri.AbsolutePath.Contains(fileName));
 	}
@@ -125,7 +125,7 @@ public class DemoHttpClientTests
 
 		var file = new DemoDomainFile(fileName, _nonEmptyBody);
 
-		var result = await _DemoHttpClient.UploadFile(file);
+		var result = await _demoHttpClient.UploadFile(file);
 
 		Assert.True(result);
 	}
@@ -141,6 +141,6 @@ public class DemoHttpClientTests
 		_testClient.SetupSendAsync(responseMessage);
 		var file = new DemoDomainFile(fileName, _nonEmptyBody);
 
-		Assert.ThrowsAsync<HttpRequestException>(async () => await _DemoHttpClient.UploadFile(file));
+		Assert.ThrowsAsync<HttpRequestException>(async () => await _demoHttpClient.UploadFile(file));
 	}
 }

@@ -26,7 +26,7 @@ public class DemoHttpClient : IDemoHttpClient
 	public async Task<DemoDomainFile> GetFile(string fileKey)
 	{
 		// only for local testing
-		fileKey = "sample.pdf";
+		//fileKey = "sample.pdf";
 
 		var uri = new Uri(_client.BaseAddress + fileKey);
 		var request = new HttpRequestMessage(HttpMethod.Get, uri);
