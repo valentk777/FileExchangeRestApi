@@ -1,14 +1,14 @@
-﻿namespace FileExchangeRestApi.Domain.HttpClients;
-
+﻿
 using Microsoft.Extensions.Options;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using FileExchangeRestApi.Contracts;
-using FileExchangeRestApi.Contracts.Configs;
-using FileExchangeRestApi.Contracts.Exceptions;
+using FileExchange.Contracts;
+using FileExchange.Contracts.Configs;
+using FileExchange.Contracts.Exceptions;
 
+namespace FileExchange.Domain.HttpClients;
 public class DemoHttpClient : IDemoHttpClient
 {
 	private readonly HttpClient _client;
@@ -23,16 +23,19 @@ public class DemoHttpClient : IDemoHttpClient
 		_client = GetHttpClient(httpClientFactory, baseAddress);
 	}
 
-	public async Task<DemoDomainFile> GetFile(string fileName)
+	public async Task<DemoDomainFile> GetFile(string fileKey)
 	{
-		var uri = new Uri(_client.BaseAddress + fileName);
+		var uri = new Uri(_client.BaseAddress + fileKey);
 		var request = new HttpRequestMessage(HttpMethod.Get, uri);
 
 		using HttpResponseMessage response = await SendRequest(request);
 
-		var fileBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+		var fileStream = await response.Content.ReadAsStreamAsync();
 
-		return new DemoDomainFile(fileName, fileBytes);
+		return new DemoDomainFile(fileKey, fileStream);
+		//var fileBytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+
+		//return new DemoDomainFile(fileKey, fileBytes);
 	}
 
 	public async Task<bool> UploadFile(DemoDomainFile file)
@@ -40,7 +43,7 @@ public class DemoHttpClient : IDemoHttpClient
 		var uri = new Uri(_client.BaseAddress + file.Name);
 		var request = new HttpRequestMessage(HttpMethod.Put, uri);
 
-		request.Content = new ByteArrayContent(file.Content);
+		//request.Content = new ByteArrayContent(file.Content);
 
 		using HttpResponseMessage response = await SendRequest(request);
 

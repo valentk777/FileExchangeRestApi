@@ -1,9 +1,11 @@
-﻿namespace FileExchangeRestApi.Api.Middlewares;
-
+﻿
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
-using FileExchangeRestApi.Contracts;
+using FileExchange.Contracts;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
+namespace FileExchange.Api.Middlewares;
 [ExcludeFromCodeCoverage]
 public class CommandLoggingMiddleware
 {

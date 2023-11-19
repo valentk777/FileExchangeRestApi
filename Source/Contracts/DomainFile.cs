@@ -1,44 +1,54 @@
-﻿namespace FileExchangeRestApi.Contracts;
+﻿
+using System.IO;
 
-using Microsoft.AspNetCore.Http;
-
+namespace FileExchange.Contracts;
 public class DemoDomainFile
 {
 	public string? Name { get; init; } = default!;
 
-	public byte[] Content { get; init; } = Array.Empty<byte>();
+	public Stream Content { get; init; } = Stream.Null;
+	//public byte[] Content { get; init; } = Array.Empty<byte>();
 
 	public DemoDomainFile()
 	{
 	}
 
-	public DemoDomainFile(string fileName, byte[]? data)
+	//public DemoDomainFile(string fileName, byte[]? data)
+	//{
+	//	Name = fileName;
+	//	Content = data ?? Array.Empty<byte>();
+	//}
+
+	public DemoDomainFile(string fileName, Stream? data)
 	{
 		Name = fileName;
-		Content = data ?? Array.Empty<byte>();
+		Content = data ?? Stream.Null;
 	}
 
-	public DemoDomainFile(IFormFile? file)
-	{
-		if (file == null) {
-			return;
-		}
+	//public DemoDomainFile(IFormFile? file)
+	//{
+	//	if (file == null) {
+	//		return;
+	//	}
 
-		if (!string.IsNullOrEmpty(file.FileName) && !file.FileName.Contains(" ")) {
-			Name = file.FileName;
-		}
+	//	if (!string.IsNullOrEmpty(file.FileName) && !file.FileName.Contains(" ")) {
+	//		Name = file.FileName;
+	//	}
 
-		Content = ConvertToByteArray(file) ?? Array.Empty<byte>();
-	}
+	//	Content = ConvertToByteArray(file) ?? Array.Empty<byte>();
+	//}
 
 	public bool IsValid() =>
-		!string.IsNullOrEmpty(Name) && !Name.Contains(" ") && Content != null && Content.Length != 0;
+		!string.IsNullOrEmpty(Name) && !Name.Contains(" ") && Content != Stream.Null;
 
-	private byte[] ConvertToByteArray(IFormFile file)
-	{
-		using var memoryStream = new MemoryStream();
-		file.CopyTo(memoryStream);
+	//public bool IsValid() =>
+	//	!string.IsNullOrEmpty(Name) && !Name.Contains(" ") && Content != null && Content.Length != 0;
 
-		return memoryStream.ToArray();
-	}
+	//private byte[] ConvertToByteArray(IFormFile file)
+	//{
+	//	using var memoryStream = new MemoryStream();
+	//	file.CopyTo(memoryStream);
+
+	//	return memoryStream.ToArray();
+	//}
 }

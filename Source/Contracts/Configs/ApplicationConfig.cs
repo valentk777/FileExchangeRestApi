@@ -1,4 +1,4 @@
-﻿namespace FileExchangeRestApi.Contracts.Configs;
+﻿namespace FileExchange.Contracts.Configs;
 
 public class ApplicationConfig
 {

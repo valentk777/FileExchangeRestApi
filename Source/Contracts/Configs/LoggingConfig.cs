@@ -1,4 +1,6 @@
-﻿namespace FileExchangeRestApi.Contracts.Configs;
+﻿using System.Collections.Generic;
+
+namespace FileExchange.Contracts.Configs;
 
 public class LoggingConfig
 {

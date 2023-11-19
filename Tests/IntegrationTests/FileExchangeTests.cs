@@ -1,4 +1,3 @@
-namespace FileExchangeRestApi.Integration.Tests;
 
 using Microsoft.AspNetCore.Mvc.Testing;
 using Syncfusion.Pdf;
@@ -7,10 +6,13 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using FileExchangeRestApi.Api;
-using FileExchangeRestApi.Contracts;
+using FileExchange.Contracts;
 using Xunit;
+using System.Threading.Tasks;
+using System.Linq;
+using System.IO;
 
+namespace FileExchange.Integration.Tests;
 public class FileExchangeTests
 {
 	private HttpClient _httpClient;
@@ -30,18 +32,16 @@ public class FileExchangeTests
 		var response = await _httpClient.GetAsync(route);
 
 		Assert.True(response.IsSuccessStatusCode);
+		Assert.NotNull(response.Content);
 
-		var file = await response.Content.ReadAsAsync<DemoDomainFile>();
+		var byteArray = await response.Content.ReadAsByteArrayAsync();
+		Assert.Equal(35168, byteArray.Length);
 
-		Assert.Equal(fileName, file.Name);
-		Assert.NotNull(file.Content);
-		Assert.Equal(3028, file.Content.Length);
-
-		PdfLoadedDocument loadedDocument = new PdfLoadedDocument(file.Content);
+		PdfLoadedDocument loadedDocument = new PdfLoadedDocument(byteArray);
 		PdfLoadedPage page = loadedDocument.Pages[0] as PdfLoadedPage;
 
 		page.ExtractText(out var content);
-		Assert.Contains("A Simple PDF File", content.TextLine.First().Text);
+		Assert.Equal("Integration test file ", content.TextLine.First().Text);
 
 		// Note: for local testing
 		//File.WriteAllBytes("integration-test-output-pdf.pdf", result);

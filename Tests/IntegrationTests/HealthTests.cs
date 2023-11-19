@@ -1,11 +1,11 @@
-namespace FileExchangeRestApi.Integration.Tests;
-
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http;
-using FileExchangeRestApi.Api;
-using FileExchangeRestApi.Contracts;
+using FileExchange.Contracts;
 using Xunit;
+using System.Threading.Tasks;
+
+namespace FileExchange.Integration.Tests;
 
 public class HealthTests
 {

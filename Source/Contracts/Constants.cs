@@ -1,4 +1,4 @@
-﻿namespace FileExchangeRestApi.Contracts;
+﻿namespace FileExchange.Contracts;
 
 public static class Constants
 {

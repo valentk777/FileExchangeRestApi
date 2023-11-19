@@ -1,4 +1,6 @@
-﻿namespace FileExchangeRestApi.Contracts.Exceptions;
+﻿using System;
+
+namespace FileExchange.Contracts.Exceptions;
 
 public class ApplicationValidationException : Exception
 {

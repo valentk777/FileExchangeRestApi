@@ -1,28 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="..\..\shared-test.props" />
+
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
-	<AssemblyName>FileExchangeRestApi.Integration.Tests</AssemblyName>
-	<RootNamespace>FileExchangeRestApi.Integration.Tests</RootNamespace>
+	<AssemblyName>FileExchange.Integration.Tests</AssemblyName>
+	<RootNamespace>FileExchange.Integration.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
 	<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
-	<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.16" />
 	<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-	<PackageReference Include="Moq" Version="4.18.4" />
 	<PackageReference Include="Syncfusion.Pdf.Net.Core" Version="21.2.4" />
-	<PackageReference Include="xunit" Version="2.4.1" />
-	<PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
-	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  <PrivateAssets>all</PrivateAssets>
-	</PackageReference>
-	<PackageReference Include="coverlet.collector" Version="3.2.0">
-	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  <PrivateAssets>all</PrivateAssets>
-	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>

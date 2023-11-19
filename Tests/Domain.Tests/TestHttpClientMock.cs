@@ -1,49 +1,51 @@
-﻿namespace FileExchangeRestApi.Domain.HttpClients
+﻿
+using Moq;
+using Moq.Protected;
+using System;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace FileExchange.Domain.Tests;
+internal class TestHttpClientMock
 {
-	using Moq;
-	using Moq.Protected;
-	using System;
-	using System.Threading.Tasks;
+	private Mock<HttpMessageHandler> _httpHandlerMock;
+	private Mock<IHttpClientFactory> _mockHttpClientFactory;
 
-	internal class TestHttpClientMock
+	public TestHttpClientMock(string httpClientName)
 	{
-		private Mock<HttpMessageHandler> _httpHandlerMock;
-		private Mock<IHttpClientFactory> _mockHttpClientFactory;
+		_httpHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
 
-		public TestHttpClientMock(string httpClientName)
+		var httpClient = new HttpClient(_httpHandlerMock.Object)
 		{
-			_httpHandlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+			BaseAddress = new Uri("http://www.test-url.com")
+		};
 
-			var httpClient = new HttpClient(_httpHandlerMock.Object) {
-				BaseAddress = new Uri("http://www.test-url.com")
-			};
-
-			_mockHttpClientFactory = new Mock<IHttpClientFactory>();
-			_mockHttpClientFactory.Setup(_ => _.CreateClient(httpClientName)).Returns(httpClient);
-		}
-
-		public IHttpClientFactory GetHttpClientFactory() =>
-			_mockHttpClientFactory.Object;
-
-		public void SetupSendAsync(HttpResponseMessage result) =>
-			_httpHandlerMock
-				.Protected()
-				.Setup<Task<HttpResponseMessage>>(
-					"SendAsync",
-					ItExpr.IsAny<HttpRequestMessage>(),
-					ItExpr.IsAny<CancellationToken>()
-				)
-				.ReturnsAsync(result)
-				.Verifiable();
-
-		public void VerifySendAsync(Func<HttpRequestMessage, bool> match) =>
-			_httpHandlerMock
-				.Protected()
-				.Verify(
-					"SendAsync",
-					Times.Exactly(1), // we expected a single external request
-					ItExpr.Is<HttpRequestMessage>(request => match(request)),
-					ItExpr.IsAny<CancellationToken>()
-				);
+		_mockHttpClientFactory = new Mock<IHttpClientFactory>();
+		_mockHttpClientFactory.Setup(_ => _.CreateClient(httpClientName)).Returns(httpClient);
 	}
+
+	public IHttpClientFactory GetHttpClientFactory() =>
+		_mockHttpClientFactory.Object;
+
+	public void SetupSendAsync(HttpResponseMessage result) =>
+		_httpHandlerMock
+			.Protected()
+			.Setup<Task<HttpResponseMessage>>(
+				"SendAsync",
+				ItExpr.IsAny<HttpRequestMessage>(),
+				ItExpr.IsAny<CancellationToken>()
+			)
+			.ReturnsAsync(result)
+			.Verifiable();
+
+	public void VerifySendAsync(Func<HttpRequestMessage, bool> match) =>
+		_httpHandlerMock
+			.Protected()
+			.Verify(
+				"SendAsync",
+				Times.Exactly(1), // we expected a single external request
+				ItExpr.Is<HttpRequestMessage>(request => match(request)),
+				ItExpr.IsAny<CancellationToken>()
+			);
 }

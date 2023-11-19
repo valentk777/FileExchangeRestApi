@@ -1,10 +1,13 @@
-﻿namespace FileExchangeRestApi.Api.Extensions;
-
+﻿
 using System.Diagnostics.CodeAnalysis;
-using FileExchangeRestApi.Contracts;
-using FileExchangeRestApi.Contracts.Configs;
-using FileExchangeRestApi.Domain.HttpClients;
+using System.Net.Http;
+using FileExchange.Contracts;
+using FileExchange.Contracts.Configs;
+using FileExchange.Domain.HttpClients;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
+namespace FileExchange.Api.Extensions;
 [ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
@@ -14,7 +17,7 @@ public static class ServiceCollectionExtensions
 		services.Configure<LoggingConfig>(configuration.GetSection(LoggingConfig.SectionName));
 	}
 
-	public static void AddHttpClient(this IServiceCollection services)
+	public static void AddDemoHttpClient(this IServiceCollection services)
 	{
 		// Single HTTP client per client name.
 		services.AddHttpClient(Constants.HttpClient.HttpClientName).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler());

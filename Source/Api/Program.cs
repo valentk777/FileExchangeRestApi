@@ -1,36 +1,31 @@
-namespace FileExchangeRestApi.Api;
+using FileExchange.Api.Extensions;
+using FileExchange.Api.Middlewares;
+using FileExchange.Contracts;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-using System.Diagnostics.CodeAnalysis;
-using FileExchangeRestApi.Api.Extensions;
-using FileExchangeRestApi.Api.Middlewares;
-using FileExchangeRestApi.Contracts;
+var builder = WebApplication.CreateBuilder(args);
 
-[ExcludeFromCodeCoverage]
-public class Program
-{
-	private static void Main(string[] args)
-	{
-		var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks();
+builder.Services.AddDemoHttpClient();
+builder.Services.ConfigureAllOptions(builder.Configuration);
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddProblemDetails();
 
-		builder.Services.AddControllers();
-		builder.Services.AddEndpointsApiExplorer();
-		builder.Services.AddSwaggerGen();
-		builder.Services.ConfigureAllOptions(builder.Configuration);
-		builder.Services.AddHealthChecks();
-		builder.Services.AddHttpClient();
+var app = builder.Build();
 
-		var app = builder.Build();
+app.UseStatusCodePages();
+app.UseExceptionHandler();
 
-		if (app.Environment.IsDevelopment()) {
-			app.UseSwagger();
-			app.UseSwaggerUI();
-		}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-		app.UseHttpsRedirection();
-		app.UseAuthorization();
-		app.UseMiddleware<CommandLoggingMiddleware>();
-		app.MapControllers();
-		app.MapHealthChecks(Constants.Endpoint.Health);
-		app.Run();
-	}
-}
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.UseMiddleware<CommandLoggingMiddleware>();
+app.MapControllers();
+app.MapHealthChecks(Constants.Endpoint.Health);
+
+app.Run();

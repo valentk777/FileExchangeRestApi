@@ -17,7 +17,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Tests", "Tests\Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Tests", "Tests\Api.Tests\Api.Tests.csproj", "{8AFAA8EA-8A51-4CB2-BB6C-C871AC927BEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "Tests\IntegrationTests\IntegrationTests.csproj", "{BE634A56-3389-483C-B755-7D747FFD3E28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "Tests\IntegrationTests\IntegrationTests.csproj", "{BE634A56-3389-483C-B755-7D747FFD3E28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceTests", "Tests\PerformanceTests\PerformanceTests.csproj", "{80EA678E-D11A-4994-94C5-BD0ABEC6311D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0CA0C21B-F69F-4425-AA10-D26BC4414869}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		Dockerfile = Dockerfile
+		LICENSE = LICENSE
+		README.md = README.md
+		shared-test.props = shared-test.props
+		shared.props = shared.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +65,10 @@ Global
 		{BE634A56-3389-483C-B755-7D747FFD3E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE634A56-3389-483C-B755-7D747FFD3E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE634A56-3389-483C-B755-7D747FFD3E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80EA678E-D11A-4994-94C5-BD0ABEC6311D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80EA678E-D11A-4994-94C5-BD0ABEC6311D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80EA678E-D11A-4994-94C5-BD0ABEC6311D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80EA678E-D11A-4994-94C5-BD0ABEC6311D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +80,7 @@ Global
 		{B18ABAE2-5A89-4703-9534-4A5497E7783C} = {E3A411C3-59B6-45D2-BF10-552D371309DF}
 		{8AFAA8EA-8A51-4CB2-BB6C-C871AC927BEC} = {E3A411C3-59B6-45D2-BF10-552D371309DF}
 		{BE634A56-3389-483C-B755-7D747FFD3E28} = {E3A411C3-59B6-45D2-BF10-552D371309DF}
+		{80EA678E-D11A-4994-94C5-BD0ABEC6311D} = {E3A411C3-59B6-45D2-BF10-552D371309DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A7794D52-229F-47DF-90D6-FA424AC2D933}

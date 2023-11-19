@@ -1,35 +1,36 @@
-namespace FileExchangeRestApi.Domain.Tests;
 
 using Microsoft.Extensions.Options;
-using Moq;
 using System.Net;
 using System.Text;
-using FileExchangeRestApi.Contracts;
-using FileExchangeRestApi.Contracts.Configs;
-using FileExchangeRestApi.Contracts.Exceptions;
-using FileExchangeRestApi.Domain.HttpClients;
+using FileExchange.Contracts;
+using FileExchange.Contracts.Configs;
+using FileExchange.Contracts.Exceptions;
+using FileExchange.Domain.HttpClients;
 using Xunit;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.IO;
 
+namespace FileExchange.Domain.Tests;
 public class DemoHttpClientTests
 {
-	private ApplicationConfig _config;
 	private TestHttpClientMock _testClient;
 	private DemoHttpClient _DemoHttpClient;
 
 	private string fileName = "fileName";
 	private string responseContent = "Response content";
-	private byte[] _emptyBody = null;
-	private byte[] _nonEmptyBody = Encoding.UTF8.GetBytes("body");
+	private Stream _emptyBody = Stream.Null;
+	private Stream _nonEmptyBody = new MemoryStream(Encoding.UTF8.GetBytes("body"));
 
 	public DemoHttpClientTests()
 	{
-		_config = new ApplicationConfig
+		var config = new ApplicationConfig
 		{
 			DemoClientBaseUrl = "http://www.test-url.com",
 		};
 
 		_testClient = new TestHttpClientMock(Constants.HttpClient.HttpClientName);
-		_DemoHttpClient = new DemoHttpClient(Options.Create(_config), _testClient.GetHttpClientFactory());
+		_DemoHttpClient = new DemoHttpClient(Options.Create(config), _testClient.GetHttpClientFactory());
 	}
 
 	[Fact]
@@ -75,7 +76,10 @@ public class DemoHttpClientTests
 
 		Assert.NotNull(file);
 		Assert.Equal(fileName, file.Name);
-		Assert.Equal(responseContent, Encoding.UTF8.GetString(file.Content));
+
+		StreamReader reader = new StreamReader(file.Content);
+		var text = reader.ReadToEnd();
+		Assert.Equal(responseContent, text);
 	}
 
 	[Fact]
