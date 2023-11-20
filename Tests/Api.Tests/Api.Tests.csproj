@@ -3,13 +3,13 @@
 	<Import Project="..\..\shared.props" />
 	<Import Project="..\..\shared-test.props" />
 
-  <PropertyGroup>
-	<AssemblyName>FileExchange.Api.Tests</AssemblyName>
-	<RootNamespace>FileExchange.Api.Tests</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>FileExchange.Api.Tests</AssemblyName>
+		<RootNamespace>FileExchange.Api.Tests</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\Api\Api.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Source\Api\Api.csproj" />
+	</ItemGroup>
 
 </Project>

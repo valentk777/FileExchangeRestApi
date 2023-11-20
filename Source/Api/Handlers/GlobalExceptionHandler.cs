@@ -12,37 +12,37 @@ namespace FileExchange.Api.Handlers;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> loggger) : IExceptionHandler
 {
-	private readonly ILogger<GlobalExceptionHandler> _logger = loggger;
+    private readonly ILogger<GlobalExceptionHandler> _logger = loggger;
 
-	public async ValueTask<bool> TryHandleAsync(
-		HttpContext httpContext,
-		Exception exception,
-		CancellationToken cancellationToken)
-	{
-		var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext httpContext,
+        Exception exception,
+        CancellationToken cancellationToken)
+    {
+        var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
-		_logger.LogError(exception, "Could not process a request on machoine {MachineName}. TraceId: {TraceId}", Environment.MachineName, traceId);
+        _logger.LogError(exception, "Could not process a request on machoine {MachineName}. TraceId: {TraceId}", Environment.MachineName, traceId);
 
-		var (statusCode, title) = MapException(exception);
+        var (statusCode, title) = MapException(exception);
 
-		await Results.Problem(
-			title: title,
-			statusCode: statusCode,
-			extensions: new Dictionary<string, object?>
-			{
-				{"traceId", traceId}
-			}
-			).ExecuteAsync(httpContext);
+        await Results.Problem(
+            title: title,
+            statusCode: statusCode,
+            extensions: new Dictionary<string, object?>
+            {
+                {"traceId", traceId}
+            }
+            ).ExecuteAsync(httpContext);
 
-		return true;
-	}
+        return true;
+    }
 
-	private static (int StatusCode, string Title) MapException(Exception exception)
-	{
-		return exception switch
-		{
-			DomainValidationException => (StatusCodes.Status400BadRequest, exception.Message),
-			_ => (StatusCodes.Status500InternalServerError, "")
-		};
-	}
+    private static (int StatusCode, string Title) MapException(Exception exception)
+    {
+        return exception switch
+        {
+            DomainValidationException => (StatusCodes.Status400BadRequest, exception.Message),
+            _ => (StatusCodes.Status500InternalServerError, "")
+        };
+    }
 }

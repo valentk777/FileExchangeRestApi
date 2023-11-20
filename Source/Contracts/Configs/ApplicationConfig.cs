@@ -1,8 +1,12 @@
-﻿namespace FileExchange.Contracts.Configs;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FileExchange.Contracts.Configs;
 
 public class ApplicationConfig
 {
-	public const string SectionName = "Application";
+    public const string SectionName = "Application";
 
-	public string DemoClientBaseUrl { get; init; } = default!;
+    [Url]
+    [MinLength(1)]
+    public string DemoClientBaseUrl { get; init; } = default!;
 }

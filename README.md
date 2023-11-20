@@ -1,7 +1,11 @@
-# FileExchange
-It is dotnet8 API with pdf file exange endpoints, unit, integration and performance tests examples.
+# FileExchange Rest API without reading to memory
+- It is stream based, dotnet8 API, for large file exange.
+- Get and upload enpoints
+- Unit, integration and performance tests examples
 - For performance testing I am using K6
 - Global logging with new dotNet8 feature
+- IOptions registration
+- Result pattern (not implemented yet)
 
 ## CI/CD
 I use appveyor for CI/CD builds and releases

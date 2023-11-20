@@ -1,95 +1,91 @@
-
 using Microsoft.AspNetCore.Mvc;
 using FileExchange.Contracts;
-using FileExchange.Domain.HttpClients;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System;
-using FileExchange.Api.Attributes;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
+using FileExchange.Domain.FileUploadServices;
+using FileExchange.Domain.FileDownloadServices;
+using System.IO;
 
 namespace FileExchange.Api.Controllers;
 [ApiController]
 public class DemoController : ControllerBase
 {
-	private const long MaxFileSize = 1L * 1024L * 1024L * 1024L; // 1GB, adjust to your need
+    private readonly ILogger<DemoController> _logger;
+    private readonly IFileUploadService _fileUploadService;
+    private readonly IFileDownloadService _fileDownloadService;
 
-	private readonly ILogger<DemoController> _logger;
-	private readonly IDemoHttpClient _httpClient;
+    public DemoController(ILogger<DemoController> logger, IFileUploadService fileUploadService, IFileDownloadService fileDownloadService)
+    {
+        _logger = logger;
+        _fileUploadService = fileUploadService;
+        _fileDownloadService = fileDownloadService;
+    }
 
-	public DemoController(ILogger<DemoController> logger, IDemoHttpClient holterHttpClient)
-	{
-		_logger = logger;
-		_httpClient = holterHttpClient;
-	}
+    [HttpGet]
+    [Route(Constants.Routes.GetFileRoute)]
+    public async Task<IResult> DownloadFile([FromRoute] string? fileName)
+    {
+        if (string.IsNullOrEmpty(fileName) || fileName.Contains(" "))
+        {
+            _logger.LogError(Constants.Logging.ProvidedBadParameterValue, nameof(fileName), fileName);
+            return Results.BadRequest(string.Format(Constants.Logging.ProvidedBadParameterValue, nameof(fileName), fileName));
+        }
 
-	[HttpGet]
-	[Route(Constants.Routes.GetFileRoute)]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	[DisableFormValueModelBinding]
-	[RequestSizeLimit(MaxFileSize)]
-	[RequestFormLimits(MultipartBodyLengthLimit = MaxFileSize)]
-	public async Task<IResult> GetFile([FromRoute] string? fileName)
-	{
-		// fileName.Contains(" ") - it is used in URL later, so we cannot have spaces.
-		if (string.IsNullOrEmpty(fileName) || fileName.Contains(" ")) {
-			_logger.LogError(Constants.Logging.ProvidedBadParameterValue, nameof(fileName), fileName);
-			return Results.BadRequest(string.Format(Constants.Logging.ProvidedBadParameterValue, nameof(fileName), fileName));
-		}
+        try
+        {
+            var file = await _fileDownloadService.DownloadFileAsync(fileName);
 
-		try {
-			var file = await _httpClient.GetFile(fileName);
+            if (file.IsValid())
+            {
+                return Results.File(file.Content, Constants.HttpClient.ApplicationPdf, file.Name);
+            }
 
-			if (file.IsValid()) {
-				return Results.File(file.Content, Constants.HttpClient.ApplicationPdf, file.Name);
+            _logger.LogInformation(Constants.Logging.FileIsNullOrEmpty);
 
-				// NOTE: ASP.NET converts the byte[] to Base64 behind the scenes.
-				//return Results.Ok(file);
-			}
+            return Results.NoContent();
 
-			_logger.LogInformation(Constants.Logging.FileIsNullOrEmpty);
-			return Results.NoContent();
+        } catch (HttpRequestException e)
+        {
+            _logger.LogError(e.Message);
+            return Results.BadRequest(e.Message);
+        } catch (Exception e)
+        {
+            _logger.LogError(e.Message, e.StackTrace);
+            return Results.BadRequest(e.Message);
+        }
+    }
 
-		} catch (HttpRequestException e) {
-			_logger.LogError(e.Message);
-			return Results.BadRequest(e.Message);
-		} catch (Exception e) {
-			_logger.LogError(e.Message, e.StackTrace);
-			return Results.BadRequest(e.Message);
-		}
-	}
+    [HttpPost]
+    [Route(Constants.Routes.UploadFileRoute)]
+    public async Task<IResult> UploadFile()
+    {
+        try
+        {
+            var boundary = Request.GetMultipartBoundary();
+            var reader = new MultipartReader(boundary, HttpContext.Request.Body);
+            var section = await reader.ReadNextSectionAsync();
 
-	[HttpPost]
-	[Route(Constants.Routes.UploadFileRoute)]
-	[ProducesResponseType(typeof(DemoDomainFile), StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status204NoContent)]
-	[ProducesResponseType(StatusCodes.Status400BadRequest)]
-	[DisableFormValueModelBinding]
-	[RequestSizeLimit(MaxFileSize)]
-	[RequestFormLimits(MultipartBodyLengthLimit = MaxFileSize)]
-	public async Task<IResult> UploadFile(IFormFile file)
-	{
-		using var stream = file.OpenReadStream();
-		var domainFile = new DemoDomainFile(file.FileName, stream);
+            while (section != null)
+            {
+                await _fileUploadService.UploadFileAsync(section.Body, section.ContentDisposition);
 
-		if (!domainFile.IsValid() || file.Length == 0) {
-			_logger.LogError(Constants.Logging.ProvidedBadParameterValue, nameof(file), file);
-			return Results.BadRequest(string.Format(Constants.Logging.ProvidedBadParameterValue, nameof(file), file));
-		}
+                section = await reader.ReadNextSectionAsync();
+            }
 
-		try {
-			var result = await _httpClient.UploadFile(domainFile);
-
-			return Results.Ok(result);
-		} catch (HttpRequestException e) {
-			_logger.LogError(e.Message);
-			return Results.BadRequest(e.Message);
-		} catch (Exception e) {
-			_logger.LogError(e.Message, e.StackTrace);
-			return Results.BadRequest(e.Message);
-		}
-	}
+            return Results.Ok("File(s) uploaded successfully");
+        } catch (HttpRequestException e)
+        {
+            _logger.LogError(e.Message);
+            return Results.BadRequest(e.Message);
+        } catch (Exception e)
+        {
+            _logger.LogError(e.Message, e.StackTrace);
+            return Results.BadRequest(e.Message);
+        }
+    }
 }

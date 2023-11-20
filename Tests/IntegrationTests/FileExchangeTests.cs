@@ -11,8 +11,12 @@ using Xunit;
 using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
+using System.Reflection.Metadata;
+using Syncfusion.Pdf.Graphics;
+using Syncfusion.Drawing;
 
 namespace FileExchange.Integration.Tests;
+
 public class FileExchangeTests
 {
 	private HttpClient _httpClient;
@@ -32,44 +36,50 @@ public class FileExchangeTests
 		var response = await _httpClient.GetAsync(route);
 
 		Assert.True(response.IsSuccessStatusCode);
-		Assert.NotNull(response.Content);
+		//Assert.NotNull(response.Content);
+        Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
 
-		var byteArray = await response.Content.ReadAsByteArrayAsync();
-		Assert.Equal(35168, byteArray.Length);
+        var byteArray = await response.Content.ReadAsByteArrayAsync();
+        Assert.Equal(3028, byteArray.Length);
 
-		PdfLoadedDocument loadedDocument = new PdfLoadedDocument(byteArray);
-		PdfLoadedPage page = loadedDocument.Pages[0] as PdfLoadedPage;
+        PdfLoadedDocument loadedDocument = new PdfLoadedDocument(byteArray);
+        PdfLoadedPage page = loadedDocument.Pages[0] as PdfLoadedPage;
 
-		page.ExtractText(out var content);
-		Assert.Equal("Integration test file ", content.TextLine.First().Text);
+        page.ExtractText(out var content);
+        Assert.Equal("A Simple PDF File ", content.TextLine.First().Text);
 
-		// Note: for local testing
-		//File.WriteAllBytes("integration-test-output-pdf.pdf", result);
-	}
+        // Note: for local testing
+        //File.WriteAllBytes("integration-test-output-pdf.pdf", result);
+    }
 
-	[Fact(Skip = "Only when I have actual endpoint")]
+	[Fact]
 	public async Task GivenApi_WhenUploadFileWithCorrectFileNameAndContent_ThenReturns200()
 	{
 		var fileName = "integration-test-upload-file.pdf";
-		var fileBytes = await GetPdfFile(fileName);
-		var fileContent = new ByteArrayContent(fileBytes);
-		fileContent.Headers.ContentType = new MediaTypeHeaderValue("multipart/form-data");
-		var formData = new MultipartFormDataContent {
-			{ fileContent, "file", fileName }
-		};
+		var fileContent = GetPdfFile(fileName);
 
-		var response = await _httpClient.PostAsync(Constants.Routes.UploadFileRoute, formData);
+		var response = await _httpClient.PostAsync(Constants.Routes.UploadFileRoute, fileContent);
 
-		Assert.True(response.IsSuccessStatusCode);
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.Equal("\"File(s) uploaded successfully\"", await response.Content.ReadAsStringAsync());
 	}
 
-	private async Task<byte[]> GetPdfFile(string filePath) =>
-		await File.ReadAllBytesAsync(filePath);
+    //private async Task<byte[]> GetPdfFile(string filePath) =>
+    //	await File.ReadAllBytesAsync(filePath);
 
-	private async Task<byte[]> GetBytesFromResponseContent(HttpResponseMessage response)
-	{
-		var bytes = await response.Content.ReadAsByteArrayAsync();
-		var encoded = Encoding.UTF8.GetString(bytes).Replace("\"", "");
-		return Convert.FromBase64String(encoded);
-	}
+    private MultipartFormDataContent GetPdfFile(string fileName)
+    {
+        var content = new MultipartFormDataContent();
+        var fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        content.Add(new StreamContent(fileStream), "file", fileName);
+
+        return content;
+    }
+
+    //   private async Task<byte[]> GetBytesFromResponseContent(HttpResponseMessage response)
+    //{
+    //	var bytes = await response.Content.ReadAsByteArrayAsync();
+    //	var encoded = Encoding.UTF8.GetString(bytes).Replace("\"", "");
+    //	return Convert.FromBase64String(encoded);
+    //}
 }

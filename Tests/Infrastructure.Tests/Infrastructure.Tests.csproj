@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\..\shared.props" />
+	<Import Project="..\..\shared-test.props" />
+
+	<PropertyGroup>
+		<AssemblyName>FileExchange.Infrastructure.Tests</AssemblyName>
+		<RootNamespace>FileExchange.Infrastructure.Tests</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Source\Infrastructure\Infrastructure.csproj" />
+	</ItemGroup>
+
+</Project>

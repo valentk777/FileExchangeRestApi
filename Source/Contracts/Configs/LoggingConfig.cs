@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FileExchange.Contracts.Configs;
+﻿namespace FileExchange.Contracts.Configs;
 
 public class LoggingConfig
 {
