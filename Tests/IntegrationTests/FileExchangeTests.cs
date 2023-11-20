@@ -36,7 +36,7 @@ public class FileExchangeTests
 		var response = await _httpClient.GetAsync(route);
 
 		Assert.True(response.IsSuccessStatusCode);
-		//Assert.NotNull(response.Content);
+        Assert.NotNull(response.Content);
         Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
 
         var byteArray = await response.Content.ReadAsByteArrayAsync();

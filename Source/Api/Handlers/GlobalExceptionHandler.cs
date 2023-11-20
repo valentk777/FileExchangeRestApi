@@ -10,9 +10,14 @@ using System.Threading.Tasks;
 
 namespace FileExchange.Api.Handlers;
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> loggger) : IExceptionHandler
+public class GlobalExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger<GlobalExceptionHandler> _logger = loggger;
+    private readonly ILogger<GlobalExceptionHandler> _logger;
+
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> loggger)
+    {
+        _logger = loggger;
+    }
 
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
