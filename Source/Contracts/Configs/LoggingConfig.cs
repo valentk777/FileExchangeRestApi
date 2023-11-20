@@ -9,6 +9,4 @@ public class LoggingConfig
 	public LogLevel Level { get; init; } = default!;
 
 	public bool LogRegularFormat { get; set; } = default!;
-
-	public IReadOnlyCollection<string>? FilterExpressions = new List<string>();
 }

@@ -2,13 +2,13 @@
 
 	<Import Project="..\..\shared.props" />
 
-  <PropertyGroup>
-	<AssemblyName>FileExchange.Contracts</AssemblyName>
-	<RootNamespace>FileExchange.Contracts</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>FileExchange.Contracts</AssemblyName>
+		<RootNamespace>FileExchange.Contracts</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 <Project>
-	<Import Project="shared.props" />
 
 	<PropertyGroup>
 		<Nullable>disable</Nullable>

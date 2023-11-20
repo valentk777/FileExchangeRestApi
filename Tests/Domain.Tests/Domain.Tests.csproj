@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="..\..\shared.props" />
 	<Import Project="..\..\shared-test.props" />
 
-  <PropertyGroup>
-	<AssemblyName>FileExchange.Domain.Tests</AssemblyName>
-	<RootNamespace>FileExchange.Domain.Tests</RootNamespace>
-  </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>FileExchange.Domain.Tests</AssemblyName>
+		<RootNamespace>FileExchange.Domain.Tests</RootNamespace>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Source\Domain\Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Source\Domain\Domain.csproj" />
+	</ItemGroup>
 
 </Project>
